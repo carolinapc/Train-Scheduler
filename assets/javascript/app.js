@@ -27,6 +27,7 @@ var $cancelEdition;
 var $updateTrain;
 var $form;
 var $titleForm;
+var $soundEffect;
 
 
 function minutesAway(firstTime, frequency){
@@ -44,6 +45,14 @@ function minutesAway(firstTime, frequency){
     
 }
 
+//play audio on the audio object passed
+function playAudio(obj, effect){
+    var objAudio = document.getElementById(obj);
+    objAudio.src = "assets/sounds/"+effect+".mp3";
+    objAudio.load();
+    objAudio.play();
+}
+
 function nextArrival(minAway){
     var nextTrain = moment().add(minAway, "minutes");
     return moment(nextTrain).format("HH:mm");
@@ -56,8 +65,6 @@ function getFormFields(){
     train.destination = $destination.val().trim();
     train.firstTime = $firstTime.val().trim();
     train.frequency = $frequency.val().trim();
-
-
 
     return train;
 }
@@ -146,6 +153,12 @@ function renderSchedule(fields, key){
     var $row;
     var $delBtn = $("<button>").html("<i class='fas fa-minus'></i>");
     var $editBtn = $("<button>").html("<i class='fas fa-pen'></i>");
+    var currentTime = moment().format("HH:mm");
+    var minAway = minutesAway(fields.firstTime, fields.frequency); //calculates minutes away
+
+    if(currentTime === nextArrival(minAway)){
+        minAway = 0;
+    }
 
     if(editionKey === ""){
         $row = $("<tr>").attr("id",key);
@@ -162,11 +175,12 @@ function renderSchedule(fields, key){
     $delBtn.attr("data-key",key);
     $delBtn.click(removeTrain);
     
-    $editBtn.addClass("btn btn-primary");
+    $editBtn.addClass("btn btn-secondary");
     $editBtn.attr("data-key",key);
     $editBtn.click(editTrain);
 
-    var minAway = minutesAway(fields.firstTime, fields.frequency); //calculates minutes away
+    
+    
     
     $row.append($("<td class='train-name'>").text(fields.name));
     $row.append($("<td class='destination'>").text(fields.destination));
@@ -182,18 +196,23 @@ function renderSchedule(fields, key){
 }
 
 function trainArrived(name, destination, timeout){
+
     var $train = $("<figure class='train'>");
     var $caption = $("<figcaption>");
     var $trainImg = $("<img src='assets/images/train.gif'>");
     var railWidth = $rail.css("width").replace("px","");
     var railWidth = parseInt(railWidth) + 200;
-    
+
     $caption.html(`<p class='caption-name'>${name}</p><p class='caption-destination'>To: ${destination}</p>`);
+
     $train.append($caption);
     $train.append($trainImg);
-    
-    $train.css("left","-150px");
+    $train.css("left","-200px");
+
     setTimeout(function(){
+        playAudio("sound-effect","train");
+        playAudio("sound-effect2","train-whistle");
+
         $train.animate({left:"+="+railWidth+"px"},11000, function(){
             $(this).remove();
         });
@@ -263,4 +282,5 @@ $(document).ready(function(){
     $updateTrain.click(updateTrain);
 
     interval = setInterval(minuteUpdate,10000);
+    
 });

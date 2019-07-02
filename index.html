@@ -30,14 +30,16 @@
 
     <div class="jumbotron">
       <h1 class="text-center">Train Scheduler</h1>
-      <h3 class="text-center">---</h3>
+      
     </div>
 
+    <div id="rail"></div>
+    
     <div class="row">
 
       <div class="col-md-12">
         
-        <div class="card mb-4">
+        <div class="card my-4">
           <div class="card-header">Current Train Schedule</div>
           <div class="card-body table-responsive">
             <table class="table table-hover">
@@ -69,14 +71,14 @@
 
             <div class="form-group">
                 <label for="train-name">Train Name</label>
-                <input class="form-control" id="train-name" placeholder="" type="text" required>
+                <input class="form-control" id="train-name" placeholder="" type="text" required maxlength="25">
                 <div class="invalid-feedback">
                     Please provide a name.
                 </div>
             </div>
             <div class="form-group">
                 <label for="destination">Destination</label>
-                <input class="form-control" id="destination" placeholder="" type="text" required>
+                <input class="form-control" id="destination" placeholder="" type="text" required maxlength="20">
                 <div class="invalid-feedback">
                     Please provide a destination.
                 </div>

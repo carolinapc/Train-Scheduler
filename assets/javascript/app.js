@@ -8,24 +8,24 @@ var firebaseConfig = {
     appId: "1:1023297159417:web:0ed99505447c692a"
   };
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+//firebase.initializeApp(firebaseConfig);
 
-var database = firebase.database();
-var rootRef = database.ref();
+var database;
+var rootRef;
 var editionKey = "";
+var interval;
 
-
-var $trainName = $("#train-name");
-var $destination = $("#destination");
-var $firstTime = $("#first-time");
-var $frequency = $("#frequency");
-var $schedule = $("#schedule");
-var $addTrainBtn = $("#add-train-btn");
-var $editionButtons = $(".edition-buttons");
-var $cancelEdition = $("#cancel-edition-btn");
-var $updateTrain = $("#update-train-btn");
-var $form = $("#form");
-
+var $rail;
+var $trainName;;
+var $destination;
+var $firstTime;
+var $frequency;
+var $schedule;
+var $addTrainBtn;
+var $editionButtons;
+var $cancelEdition;
+var $updateTrain;
+var $form;
 
 
 function minutesAway(firstTime, frequency){
@@ -114,6 +114,7 @@ function editTrain(){
         $editionButtons.css("display","block");
         $addTrainBtn.css("display","none");
     });
+
 }
 
 function cancelEdition(){
@@ -151,7 +152,9 @@ function renderSchedule(fields, key){
         $row.empty();
     }
     
-    
+    $row.addClass("train-schedule");
+    $row.attr("data-first-time",fields.firstTime);
+
     $delBtn.addClass("btn btn-danger");
     $delBtn.attr("data-key",key);
     $delBtn.click(removeTrain);
@@ -162,28 +165,99 @@ function renderSchedule(fields, key){
 
     var minAway = minutesAway(fields.firstTime, fields.frequency); //calculates minutes away
     
-    $row.append($("<td>").text(fields.name));
-    $row.append($("<td>").text(fields.destination));
-    $row.append($("<td>").text(fields.frequency));
-    $row.append($("<td>").text(nextArrival(minAway)));
-    $row.append($("<td>").text(minAway));
+    $row.append($("<td class='train-name'>").text(fields.name));
+    $row.append($("<td class='destination'>").text(fields.destination));
+    $row.append($("<td class='frequency'>").text(fields.frequency));
+    $row.append($("<td class='next-arrival'>").text(nextArrival(minAway)));
+    $row.append($("<td class='min-away'>").text(minAway));
     $row.append($("<td>").append($editBtn));
     $row.append($("<td>").append($delBtn));
 
     $schedule.append($row);
+    
+    
+}
+
+function trainArrived(name, destination, timeout){
+    var $train = $("<figure class='train'>");
+    var $caption = $("<figcaption>");
+    var $trainImg = $("<img src='assets/images/train.gif'>");
+    var railWidth = $rail.css("width").replace("px","");
+    var railWidth = parseInt(railWidth) + 200;
+    
+    $caption.html(`<p class='caption-name'>${name}</p><p class='caption-destination'>To: ${destination}</p>`);
+    $train.append($caption);
+    $train.append($trainImg);
+    
+    $train.css("left","-150px");
+    setTimeout(function(){
+        $train.animate({left:"+="+railWidth+"px"},11000, function(){
+            $(this).remove();
+        });
+        $rail.append($train);
+    },timeout);  //delay train arrive in order to see trains arriving at the same time
+    
 
 }
 
+function minuteUpdate(){
+    timeout = 1000;
+    $(".train-schedule").each(function(index, row){
+        var currentTime = moment().format("HH:mm");
+        var firstTime = $(row).attr("data-first-time");
+        var rowKey = $(row).attr("id");
+        var frequency = $("#"+rowKey+" .frequency").text().trim();
+        var $rowNextArrival = $("#"+rowKey+" .next-arrival");
+        var $rowMinAway = $("#"+rowKey+" .min-away");
+        var trainName = $("#"+rowKey+" .train-name").text().trim();
+        var trainDestination = $("#"+rowKey+" .destination").text().trim();
+        var minAway = minutesAway(firstTime, frequency);
+
+        if(currentTime == $rowNextArrival.text().trim()){
+            trainArrived(trainName, trainDestination, timeout);
+            timeout += 3000;
+        }
+
+        $rowNextArrival.text(nextArrival(minAway));
+        $rowMinAway.text(minAway);
+
+        
+    });
+
+}
 
 function onError(err){
     console.log("Error:");
     console.log(err);
 }
 
-rootRef.on("child_added", retrieveSchedule, onError);
-
-$addTrainBtn.click(addTrain);
-$cancelEdition.click(cancelEdition);
-$updateTrain.click(updateTrain);
 
 
+$(document).ready(function(){
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    database = firebase.database();
+    rootRef = database.ref();
+    editionKey = "";
+
+    $rail = $("#rail");
+    $trainName = $("#train-name");
+    $destination = $("#destination");
+    $firstTime = $("#first-time");
+    $frequency = $("#frequency");
+    $schedule = $("#schedule");
+    $addTrainBtn = $("#add-train-btn");
+    $editionButtons = $(".edition-buttons");
+    $cancelEdition = $("#cancel-edition-btn");
+    $updateTrain = $("#update-train-btn");
+    $form = $("#form");
+
+    rootRef.on("child_added", retrieveSchedule, onError);
+    $addTrainBtn.click(addTrain);
+    $cancelEdition.click(cancelEdition);
+    $updateTrain.click(updateTrain);
+
+    interval = setInterval(minuteUpdate,10000);
+    trainArrived("Canada Vacation", "Vancouver");
+});

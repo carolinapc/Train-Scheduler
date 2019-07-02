@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Nanum+Pen+Script|ZCOOL+KuaiLe&display=swap');
+
 * {
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
 }
 
 html,body{
@@ -19,4 +22,51 @@ html,body{
 th{
     border: 0 !important;
     
+}
+
+#rail{
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1024px;
+    background-color: darkgray;
+    border: 1px solid #000;
+    position: relative;
+    height: 300px;
+    bottom:0;
+    overflow-x: hidden;
+    background: url('../images/railway.png'),url('../images/station.jpg') ;
+    background-position: bottom;
+    background-repeat: repeat-x;
+}
+
+.train{
+    position: absolute;
+    left: 0;
+    bottom: 22px;
+    width: 200px;
+
+}
+
+.train img{
+    width: 200px;
+}
+
+.train figcaption{
+    background: url('../images/cloud.gif');
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: 200px 150px;
+    height: 200px;
+    padding: 94px 0 0 0;
+    border: 0;
+    text-align: center;
+}
+
+.caption-name, .caption-destination{
+    line-height: 1rem;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 20px;
+}
+.caption-name{
+    font-weight: bold;
 }

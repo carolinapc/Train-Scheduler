@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
 <html lang="en-us">
-
 <head>
 
     <meta charset="UTF-8">
@@ -41,17 +39,17 @@
         
         <div class="card mb-4">
           <div class="card-header">Current Train Schedule</div>
-          <div class="card-body">
-            <table class="table table-sm table-hover" id='employee-table'>
+          <div class="card-body table-responsive">
+            <table class="table table-hover">
               <thead>
                 <tr>
-                  <th scope="col">Train Name</th>
-                  <th scope="col">Destination</th>
-                  <th scope="col">Frequency (min)</th>
-                  <th scope="col">Next Arrival</th>
-                  <th scope="col">Minutes Away</th>
-                  <th scope="col">Edit</th>
-                  <th scope="col">Remove</th>
+                  <th>Train Name</th>
+                  <th>Destination</th>
+                  <th>Frequency (min)</th>
+                  <th>Next Arrival</th>
+                  <th>Minutes Away</th>
+                  <th>Edit</th>
+                  <th>Remove</th>
                 </tr>
               </thead>
               <tbody id="schedule">
@@ -67,27 +65,42 @@
         <div class="card mb-4">
           <div class="card-header">Add Train</div>
           <div class="card-body">
-            <!-- Entry Form -->
+            <form id="form" class="needs-validation" novalidate>
+
             <div class="form-group">
                 <label for="train-name">Train Name</label>
                 <input class="form-control" id="train-name" placeholder="" type="text" required>
+                <div class="invalid-feedback">
+                    Please provide a name.
+                </div>
             </div>
             <div class="form-group">
                 <label for="destination">Destination</label>
                 <input class="form-control" id="destination" placeholder="" type="text" required>
+                <div class="invalid-feedback">
+                    Please provide a destination.
+                </div>
             </div>
             <div class="form-group">
                 <label for="first-time">First Train Time (HH:mm - military time)</label>
                 <input class="form-control" id="first-time" placeholder="15:00" type="time" maxlength="5" required>
+                <div class="invalid-feedback">
+                    Please provide a time. Type only numbers in 24h format.
+                </div>
             </div>
             <div class="form-group">
                 <label for="frequency">Frequency (min)</label>
                 <input class="form-control" id="frequency" placeholder="" type="number" required>
+                <div class="invalid-feedback">
+                    Please provide a frequency in minutes.
+                </div>
             </div>
-            <button class="btn btn-primary float-right" id="add-train-btn">Add</button>
-            <button class="btn btn-primary float-right edition-buttons" id="cancel-edition-btn">Cancel</button>
-            <button class="btn btn-primary float-right edition-buttons" id="update-train-btn">Save</button>
+            <button class="btn btn-primary float-left" id="add-train-btn" type="submit">Add</button>
+            <button class="btn btn-primary float-left edition-buttons" id="cancel-edition-btn" type="submit">Cancel</button>
+            <button class="btn btn-primary float-left edition-buttons" id="update-train-btn" type="submit">Save</button>
+            </form>
           </div>
+
         </div>
       </div>
     </div>

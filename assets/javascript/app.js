@@ -24,6 +24,7 @@ var $addTrainBtn = $("#add-train-btn");
 var $editionButtons = $(".edition-buttons");
 var $cancelEdition = $("#cancel-edition-btn");
 var $updateTrain = $("#update-train-btn");
+var $form = $("#form");
 
 
 
@@ -54,7 +55,22 @@ function getFormFields(){
     train.destination = $destination.val().trim();
     train.firstTime = $firstTime.val().trim();
     train.frequency = $frequency.val().trim();
+
+
+
     return train;
+}
+
+function validateFields(){
+    if(form.checkValidity() === false){
+        form.classList.add('was-validated');
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+    }
+    else
+        return true;
+
 }
 
 function clearFields(){
@@ -66,15 +82,19 @@ function clearFields(){
 
     $editionButtons.css("display","none");
     $addTrainBtn.css("display","block");
+    $form.removeClass("was-validated");
+    
 }
 
 function addTrain(){
     event.preventDefault();
     var train = getFormFields();    
 
-    rootRef.push(train);
-
-    clearFields();
+    if(validateFields(train)){
+        rootRef.push(train);
+        clearFields();
+    }
+    
 }
 
 function removeTrain(){
@@ -101,13 +121,17 @@ function cancelEdition(){
 }
 
 function updateTrain(){
+    event.preventDefault();
     var train = getFormFields(); 
     
-    rootRef.child(editionKey).set(train); 
-    renderSchedule(train, editionKey);   
-    clearFields();
-
+    if(validateFields(train)){
+        rootRef.child(editionKey).set(train); 
+        renderSchedule(train, editionKey);   
+        clearFields();
+    }
 }
+
+//retrieve schedule from database
 function retrieveSchedule(data){
     if(data != null){
         renderSchedule(data.val(), data.key);
@@ -149,6 +173,7 @@ function renderSchedule(fields, key){
     $schedule.append($row);
 
 }
+
 
 function onError(err){
     console.log("Error:");

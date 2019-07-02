@@ -26,6 +26,7 @@ var $editionButtons;
 var $cancelEdition;
 var $updateTrain;
 var $form;
+var $titleForm;
 
 
 function minutesAway(firstTime, frequency){
@@ -83,6 +84,7 @@ function clearFields(){
     $editionButtons.css("display","none");
     $addTrainBtn.css("display","block");
     $form.removeClass("was-validated");
+    $formTitle.text("Add Train");
     
 }
 
@@ -104,6 +106,7 @@ function removeTrain(){
 }
 
 function editTrain(){
+    $formTitle.text("Edit Train");
     editionKey = $(this).attr("data-key");
     rootRef.child(editionKey).once("value", function(data){
         var field = data.val();
@@ -114,7 +117,7 @@ function editTrain(){
         $editionButtons.css("display","block");
         $addTrainBtn.css("display","none");
     });
-
+    
 }
 
 function cancelEdition(){
@@ -252,6 +255,7 @@ $(document).ready(function(){
     $cancelEdition = $("#cancel-edition-btn");
     $updateTrain = $("#update-train-btn");
     $form = $("#form");
+    $formTitle = $("#form-title");
 
     rootRef.on("child_added", retrieveSchedule, onError);
     $addTrainBtn.click(addTrain);
@@ -259,5 +263,4 @@ $(document).ready(function(){
     $updateTrain.click(updateTrain);
 
     interval = setInterval(minuteUpdate,10000);
-    trainArrived("Canada Vacation", "Vancouver");
 });

@@ -15,8 +15,14 @@ html,body{
        
 }
 
+.jumbotron, main, section{
+    max-width: 1024px;
+    margin: 0 auto;
+}
+
 .edition-buttons{
     display: none;
+    margin-right: 5px;
 }
 
 th{
@@ -42,7 +48,7 @@ th{
 .train{
     position: absolute;
     left: 0;
-    bottom: 22px;
+    bottom: 25px;
     width: 200px;
 
 }

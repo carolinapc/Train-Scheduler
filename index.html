@@ -5,9 +5,12 @@
     <meta charset="UTF-8">
     <title>Train Scheduler</title>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- jQuery Reference -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Bootstrap References -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
     <!-- Firebase References -->
@@ -19,36 +22,31 @@
     <!-- Moment.js Reference -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 
-    <!-- fontawesome -->
+    <!-- fontawesome Reference -->
     <script src="https://kit.fontawesome.com/113cd923d0.js"></script>    
 
     <!-- Custom style -->
     <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- App -->
+    <script src="assets/javascript/app.js"></script>
 </head>
 
 <body>
 
     <div class="container">
         <header class="shadow p-0 mb-0 rounded">
-            <div class="container-fluid p-0">
-                <nav class="navbar navbar-expand-md px-3 m-0">
-                    <a class="navbar-brand logo" href="index.html"><h1 class="text-center"><i class="fas fa-train"></i> Train Scheduler</h1></a>
-                    <div class="dropdown dropleft show ml-auto" id="user">
-                        <a class="btn btn-secondary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-user"></i>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <span class="dropdown-item" id="user-name"></span>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" id="signout">Sign Out</a>
-                        </div>
-                    </div>                    
-                                
-                                
-                    
-                </nav>
-            </div>
+            <h1 class="text-center"><i class="fas fa-train"></i> Train Scheduler</h1>
         </header>
+
+        <section class="row mx-auto rounded bg-light  border shadow mb-0 p-2" id="user">
+            <div class="col-md-12 p-0">
+                <ul class="nav">
+                    <li class="nav-item mx-3"><i class="fas fa-user"></i> <span id="user-name"></span></li>
+                    <li class="nav-item mx-3"><a id="signout" href="#"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+                </ul>
+            </div>
+        </section>
 
         <div id="rail"></div>
         
@@ -111,8 +109,8 @@
                                 </div>
                             </div>
                             <button class="btn btn-secondary float-left" id="add-train-btn" type="submit">Add</button>
-                            <button class="btn btn-secondary float-left edition-buttons" id="cancel-edition-btn" type="submit">Cancel</button>
                             <button class="btn btn-secondary float-left edition-buttons" id="update-train-btn" type="submit">Save</button>
+                            <button class="btn btn-outline-secondary float-left edition-buttons" id="cancel-edition-btn" type="submit">Cancel</button>
                         </form>
                     </div>
                 </div>
@@ -134,17 +132,19 @@
                 </div>    
             </div>
         </section>
-    
-        <audio controls class="audio" id="sound-effect">
-            <source src="assets/sounds/train.mp3" type="audio/mpeg">
-        </audio>
-        <audio controls class="audio" id="sound-effect2">
-            <source src="assets/sounds/train-whistle.mp3" type="audio/mpeg">
-        </audio>
-        <!-- JavaScript -->
     </div>
 
-    <script src="assets/javascript/app.js"></script>
+    <footer class="shadow p-0 mb-0 rounded">
+        <h5 class="text-center">&copy; Carolina Cavalcanti</h5>
+    </footer>
+
+    <audio controls class="audio" id="sound-effect">
+        <source src="assets/sounds/train.mp3" type="audio/mpeg">
+    </audio>
+    <audio controls class="audio" id="sound-effect2">
+        <source src="assets/sounds/train-whistle.mp3" type="audio/mpeg">
+    </audio>
+    
 </body>
 
 </html>

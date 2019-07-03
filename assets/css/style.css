@@ -37,6 +37,15 @@ h1{
 
 #user{
     display: none;
+    border-color: #777 !important;
+}
+
+a{
+    color: black;
+}
+a:hover{
+    text-decoration: none;
+    color: #612127;
 }
 
 .card-header{

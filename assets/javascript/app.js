@@ -307,7 +307,7 @@ function showSignIn(){
 function app(user){
     
     $("#auth-message").text("");
-    $user.css("display","inline");
+    $user.css("display","flex");
     $("#user-name").text(user.displayName);
 
     $main.css("display","flex");

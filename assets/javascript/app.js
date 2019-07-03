@@ -6,9 +6,7 @@ var firebaseConfig = {
     storageBucket: "",
     messagingSenderId: "1023297159417",
     appId: "1:1023297159417:web:0ed99505447c692a"
-  };
-// Initialize Firebase
-//firebase.initializeApp(firebaseConfig);
+};
 
 var database;
 var rootRef;
@@ -28,7 +26,15 @@ var $updateTrain;
 var $form;
 var $titleForm;
 var $soundEffect;
+var $user;
+var $signin;
+var $main;
+var $formSection;
 
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+database = firebase.database();
+rootRef = database.ref();
 
 function minutesAway(firstTime, frequency){
     // First Time (pushed back 1 year to make sure it comes before current time)
@@ -178,9 +184,6 @@ function renderSchedule(fields, key){
     $editBtn.addClass("btn btn-secondary");
     $editBtn.attr("data-key",key);
     $editBtn.click(editTrain);
-
-    
-    
     
     $row.append($("<td class='train-name'>").text(fields.name));
     $row.append($("<td class='destination'>").text(fields.destination));
@@ -253,16 +256,77 @@ function onError(err){
     console.log(err);
 }
 
+function signIn(choice){
+    var provider;
+
+    if(choice === "google"){
+        provider = new firebase.auth.GoogleAuthProvider();
+    }else{
+        provider = new firebase.auth.GithubAuthProvider();
+    }
+    
+
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        //var token = result.credential.accessToken;
+        // The signed-in user info.
+        //var user = result.user;
+        // ...
+
+    }).catch(function(error) {
+        // Handle Errors here.
+        //var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        //var credential = error.credential;
+        // ...
+        $("#auth-message").text(errorMessage + " ("+email+")");
+    });
+
+}
+
+
+function signOut(){
+    firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+    }).catch(function(error) {
+    // An error happened.
+    });
+}
+
+function showSignIn(){
+    $user.css("display","none");
+    $signin.css("display","flex");
+    $main.css("display","none");
+    $formSection.css("display","none");
+
+}
+
+function app(user){
+    
+    $("#auth-message").text("");
+    $user.css("display","inline");
+    $("#user-name").text(user.displayName);
+
+    $main.css("display","flex");
+    $formSection.css("display","flex");
+    $signin.css("display","none");
+
+    rootRef.on("child_added", retrieveSchedule, onError);
+    $addTrainBtn.click(addTrain);
+    $cancelEdition.click(cancelEdition);
+    $updateTrain.click(updateTrain);
+
+    interval = setInterval(minuteUpdate,10000);
+}
 
 
 $(document).ready(function(){
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
 
-    database = firebase.database();
-    rootRef = database.ref();
-    editionKey = "";
-
+    $main = $("#main").css("display","none");
+    $formSection = $("#form-section").css("display","none");
     $rail = $("#rail");
     $trainName = $("#train-name");
     $destination = $("#destination");
@@ -274,13 +338,22 @@ $(document).ready(function(){
     $cancelEdition = $("#cancel-edition-btn");
     $updateTrain = $("#update-train-btn");
     $form = $("#form");
-    $formTitle = $("#form-title");
+    $formTitle = $("#form-title");    
+    $signin = $("#signin");
+    $user = $("#user");
+    $signout = $("#signout").click(signOut);
 
-    rootRef.on("child_added", retrieveSchedule, onError);
-    $addTrainBtn.click(addTrain);
-    $cancelEdition.click(cancelEdition);
-    $updateTrain.click(updateTrain);
+    $(".signin-buttons").click(function(){
+        var choice = $(this).val();
+        signIn(choice);
+    });
 
-    interval = setInterval(minuteUpdate,10000);
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          app(user);
+        } else {
+          showSignIn();
+        }
+    });
     
 });

@@ -13,6 +13,8 @@
     <!-- Firebase References -->
     <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
 
     <!-- Moment.js Reference -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
@@ -27,14 +29,30 @@
 <body>
 
     <div class="container">
-
-        <header class="mx-auto p-0">
-            <h1 class="text-center"><i class="fas fa-train"></i> Train Scheduler</h1>
+        <header class="shadow p-0 mb-0 rounded">
+            <div class="container-fluid p-0">
+                <nav class="navbar navbar-expand-md px-3 m-0">
+                    <a class="navbar-brand logo" href="index.html"><h1 class="text-center"><i class="fas fa-train"></i> Train Scheduler</h1></a>
+                    <div class="dropdown dropleft show ml-auto" id="user">
+                        <a class="btn btn-secondary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <span class="dropdown-item" id="user-name"></span>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" id="signout">Sign Out</a>
+                        </div>
+                    </div>                    
+                                
+                                
+                    
+                </nav>
+            </div>
         </header>
 
         <div id="rail"></div>
         
-        <main class="row mx-auto p-0">
+        <main class="row mx-auto p-0" id="main">
             <div class="col-md-12 p-0">
                 <div class="card my-4">
                     <div class="card-header bg-secondary text-light">Current Train Schedule</div>
@@ -58,7 +76,7 @@
             </div>
         </main>
 
-        <section class="row mx-auto p-0">
+        <section class="row mx-auto p-0 mt-3" id="form-section">
             <div class="col-md-12 p-0">
                 <div class="card mb-4">
                     <div class="card-header bg-secondary text-light" id="form-title">Add Train</div>
@@ -101,6 +119,21 @@
             </div>
         </section>
 
+        <section class="row mx-auto p-0 mt-3" id="signin">
+            <div class="col-md-12 p-0">
+                <div class="card mb-4">
+                    <div class="card-header bg-secondary text-light">Sign In</div>
+                    <div class="card-body">
+                        <p>Please choose an account to authenticate:</p>
+                        <p id="auth-message"></p>
+                        <p>
+                            <button value="google" class="btn btn-secondary signin-buttons"><i class="fab fa-google"></i> Google</button>
+                            <button value="github" class="btn btn-secondary signin-buttons"><i class="fab fa-github"></i> Github</button>
+                        </p>
+                    </div>
+                </div>    
+            </div>
+        </section>
     
         <audio controls class="audio" id="sound-effect">
             <source src="assets/sounds/train.mp3" type="audio/mpeg">

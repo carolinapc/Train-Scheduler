@@ -35,6 +35,10 @@ h1{
     
 }
 
+#user{
+    display: none;
+}
+
 .card-header{
     background-color: #612127 !important;
 }
@@ -99,4 +103,8 @@ th{
 
 audio{
     display: none;
+}
+
+#auth-message{
+    color: red;    
 }

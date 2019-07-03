@@ -274,12 +274,19 @@ function onError(err){
 function signIn(choice){
     var provider;
 
-    if(choice === "google"){
-        provider = new firebase.auth.GoogleAuthProvider();
-    }else{
-        provider = new firebase.auth.GithubAuthProvider();
+    switch (choice) {
+        case "google":
+            provider = new firebase.auth.GoogleAuthProvider();
+            break;
+        case "facebook":
+            provider = new firebase.auth.FacebookAuthProvider();
+            break;
+        case "github":
+            provider = new firebase.auth.GithubAuthProvider();
+            break;
+        default:
+            break;
     }
-    
 
     firebase.auth().signInWithPopup(provider).then(function(result) {
         // This gives you a Google Access Token. You can use it to access the Google API.

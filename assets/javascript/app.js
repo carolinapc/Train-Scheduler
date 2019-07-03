@@ -36,6 +36,7 @@ firebase.initializeApp(firebaseConfig);
 database = firebase.database();
 rootRef = database.ref();
 
+//calculates the minutes away
 function minutesAway(firstTime, frequency){
     // First Time (pushed back 1 year to make sure it comes before current time)
     var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
@@ -59,11 +60,13 @@ function playAudio(obj, effect){
     objAudio.play();
 }
 
+//calculates next arrival train
 function nextArrival(minAway){
     var nextTrain = moment().add(minAway, "minutes");
     return moment(nextTrain).format("HH:mm");
 }
 
+//grab the form fields
 function getFormFields(){
     var train = {};
     train.name = $trainName.val().trim();
@@ -75,6 +78,7 @@ function getFormFields(){
     return train;
 }
 
+//validates the form fields
 function validateFields(){
     if(form.checkValidity() === false){
         form.classList.add('was-validated');
@@ -87,6 +91,7 @@ function validateFields(){
 
 }
 
+//clears the form fields and let them as insert status
 function clearFields(){
     editionKey = "";
     $trainName.val("");
@@ -101,6 +106,7 @@ function clearFields(){
     
 }
 
+//add a new train to database
 function addTrain(){
     event.preventDefault();
     var train = getFormFields();    
@@ -112,12 +118,14 @@ function addTrain(){
     
 }
 
+//remove a train from the database
 function removeTrain(){
     var key = $(this).attr("data-key");
     rootRef.child(key).remove();
     $("#"+key).remove();
 }
 
+//prepares the form fields for edition
 function editTrain(){
     $formTitle.text("Edit Train");
     editionKey = $(this).attr("data-key");
@@ -133,10 +141,12 @@ function editTrain(){
     
 }
 
+//cancel the form fields edition
 function cancelEdition(){
     clearFields();
 }
 
+//updates the train on the database and the screen
 function updateTrain(){
     event.preventDefault();
     var train = getFormFields(); 
@@ -155,6 +165,7 @@ function retrieveSchedule(data){
     }
 }
 
+//update the schedules on the screen
 function renderSchedule(fields, key){
     var $row;
     var $delBtn = $("<button>").html("<i class='fas fa-minus'></i>");
@@ -198,6 +209,7 @@ function renderSchedule(fields, key){
     
 }
 
+//animates the train arrival
 function trainArrived(name, destination, timeout){
 
     var $train = $("<figure class='train'>");
@@ -225,6 +237,7 @@ function trainArrived(name, destination, timeout){
 
 }
 
+//update time information of all trains
 function minuteUpdate(){
     timeout = 1000;
     $(".train-schedule").each(function(index, row){
@@ -251,11 +264,13 @@ function minuteUpdate(){
 
 }
 
+//log on the console the errors
 function onError(err){
     console.log("Error:");
     console.log(err);
 }
 
+//execute the sign in chose by the user
 function signIn(choice){
     var provider;
 
@@ -287,7 +302,7 @@ function signIn(choice){
 
 }
 
-
+//logout the user
 function signOut(){
     firebase.auth().signOut().then(function() {
         // Sign-out successful.
@@ -296,6 +311,7 @@ function signOut(){
     });
 }
 
+//shows the sign in options for the user choose
 function showSignIn(){
     $user.css("display","none");
     $signin.css("display","flex");
@@ -304,6 +320,7 @@ function showSignIn(){
 
 }
 
+//starts application
 function app(user){
     
     $("#auth-message").text("");
@@ -348,6 +365,7 @@ $(document).ready(function(){
         signIn(choice);
     });
 
+    //checks if the user is authenticated
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           app(user);

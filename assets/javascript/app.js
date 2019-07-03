@@ -324,7 +324,7 @@ function showSignIn(){
     $signin.css("display","flex");
     $main.css("display","none");
     $formSection.css("display","none");
-
+    clearInterval(interval);
 }
 
 //starts application

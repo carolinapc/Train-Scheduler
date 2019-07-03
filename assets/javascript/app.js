@@ -143,6 +143,7 @@ function editTrain(){
 
 //cancel the form fields edition
 function cancelEdition(){
+    event.preventDefault();
     clearFields();
 }
 
@@ -325,6 +326,10 @@ function showSignIn(){
     $main.css("display","none");
     $formSection.css("display","none");
     clearInterval(interval);
+    clearFields();
+    $schedule.empty();
+    rootRef.off("child_added");
+    
 }
 
 //starts application

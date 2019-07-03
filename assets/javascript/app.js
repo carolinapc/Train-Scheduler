@@ -273,7 +273,7 @@ function onError(err){
 //execute the sign in chose by the user
 function signIn(choice){
     var provider;
-
+console.log(choice);
     switch (choice) {
         case "google":
             provider = new firebase.auth.GoogleAuthProvider();

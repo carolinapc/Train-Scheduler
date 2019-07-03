@@ -30,6 +30,8 @@ var $user;
 var $signin;
 var $main;
 var $formSection;
+var $loading;
+
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -288,53 +290,44 @@ function signIn(choice){
         default:
             break;
     }
-
-    firebase.auth().signInWithPopup(provider).then(function(result) {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        //var token = result.credential.accessToken;
-        // The signed-in user info.
-        //var user = result.user;
-        // ...
-
-    }).catch(function(error) {
-        // Handle Errors here.
-        //var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        //var credential = error.credential;
-        // ...
-        $("#auth-message").text(errorMessage + " ("+email+")");
-    });
+    
+    localStorage.setItem("auth","waiting");
+    firebase.auth().signInWithRedirect(provider);
 
 }
 
 //logout the user
 function signOut(){
     firebase.auth().signOut().then(function() {
-        // Sign-out successful.
+        showSignIn();
+        localStorage.setItem("auth","no");
     }).catch(function(error) {
-    // An error happened.
+        console.log("Sign out error:");
+        console.log(error);
     });
 }
 
 //shows the sign in options for the user choose
 function showSignIn(){
-    $user.css("display","none");
-    $signin.css("display","flex");
-    $main.css("display","none");
-    $formSection.css("display","none");
-    clearInterval(interval);
-    clearFields();
-    $schedule.empty();
-    rootRef.off("child_added");
-    
+    if(localStorage.getItem("auth") == "no"){
+        $user.css("display","none");
+        $signin.css("display","flex");
+        $loading.css("display","none");
+        $main.css("display","none");
+        $formSection.css("display","none");
+        $schedule.empty();
+
+        clearInterval(interval);
+        clearFields();
+
+        rootRef.off("child_added");
+    }
 }
 
 //starts application
 function app(user){
-    
+    localStorage.setItem("auth","yes");
+
     $("#auth-message").text("");
     $user.css("display","flex");
     $("#user-name").text(user.displayName);
@@ -342,6 +335,7 @@ function app(user){
     $main.css("display","flex");
     $formSection.css("display","flex");
     $signin.css("display","none");
+    $loading.css("display","none");
 
     rootRef.on("child_added", retrieveSchedule, onError);
     $addTrainBtn.click(addTrain);
@@ -356,6 +350,7 @@ $(document).ready(function(){
 
     $main = $("#main").css("display","none");
     $formSection = $("#form-section").css("display","none");
+    $loading = $("#loading");
     $rail = $("#rail");
     $trainName = $("#train-name");
     $destination = $("#destination");
@@ -372,18 +367,53 @@ $(document).ready(function(){
     $user = $("#user");
     $signout = $("#signout").click(signOut);
 
-    $(".signin-buttons").click(function(){
-        var choice = $(this).val();
-        signIn(choice);
-    });
+    if(localStorage.getItem("auth") == "waiting"){
+        $signin.css("display","none");
+        $loading.css("display","flex");
+    }
+    else{
+        $signin.css("display","flex");
+        $loading.css("display","none");
+    }
+    
+    
+
+    firebase.auth().getRedirectResult().then(function(result) {
+        if (result.credential) {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            var token = result.credential.accessToken;
+            // ...
+        }
+        // The signed-in user info.
+        var user = result.user;
+        
+    }).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        // ...
+        localStorage.setItem("auth","no");
+        $signin.css("display","flex");
+        $loading.css("display","none");
+        $("#auth-message").text(errorMessage + " ("+email+")");
+    });      
 
     //checks if the user is authenticated
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-          app(user);
+            app(user);
         } else {
-          showSignIn();
+            showSignIn();
         }
+    });
+
+    $(".signin-buttons").click(function(){
+        var choice = $(this).val();
+        signIn(choice);
     });
     
 });
